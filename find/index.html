@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Use correct character set. -->
+  <meta charset="utf-8">
+  <!-- Tell IE to use the latest, best version. -->
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <!-- Make the application on mobile take up the full browser screen and disable user scaling. -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+  <title>Hello World!</title>
+  <script src="./scripts/Cesium/Cesium.js"></script>
+  <script src="./Sandcastle/Sandcastle-header.js"></script>
+  <script src="es6Draw/CreateBillboard.js"></script>
+  <script src="es6Draw/CreatePolyline.js"></script>
+  <script src="es6Draw/CreatePolygon.js"></script>
+  <script src="es6Draw/Draw.js"></script>
+  <script src="./find/celiang.js"></script>
+  <!--引入主题样式-->
+  <link rel="stylesheet" type="text/css" href="./jquery-easyui-1.7.0/themes/default/easyui.css" />
+  <link rel="stylesheet" type="text/css" href="./jquery-easyui-1.7.0/themes/color.css">
+  <!--引入图标样式-->
+  <link rel="stylesheet" type="text/css" href="./jquery-easyui-1.7.0/themes/icon.css" />
+  <link rel="stylesheet" type="text/css" href="./jquery-easyui-1.7.0/demo/demo.css">
+  <link rel="stylesheet" type="text/css" href="./jquery-easyui-1.7.0/demo/sidemenu/sidemenu_style.css">   
+  <!--引入jQuery文件-->
+  <script src="./jquery-easyui-1.7.0/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+  <!--引入EasyUi的js文件-->
+  <script src="./jquery-easyui-1.7.0/jquery.easyui.min.js" type="text/javascript" charset="utf-8"></script>
+  <style>
+      @import url(./scripts/Cesium/Widgets/widgets.css);
+      html, body, #cesiumContainer {
+          width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden;
+      }
+  </style>
+</head>
+<body class="easyui-layout">
+  <!--布局：北-->
+  <div data-options="region:'north'" style="height: 11.1%;background-image: url(img/hhh.jpg);">
+    <!--添加网站Logo-->
+    <span id="n_logo" style="margin-left: 20px;">
+        
+        <font style="font-size: 32pt; filter: shadow(color=black); width: 71.27%; color: #360b7c; line-height: 150%; font-family: 华文彩云; height: 30px" size="px">基于Cesium的三维展示与查询平台</font>
+       
+    </span>
+    <span id="n_title" style="float: right;">
+        欢迎登录&nbsp;&nbsp;&nbsp;
+        <a id="n_title_out" href="javascript:void(0)">退出</a>
+    </span>
+</div>
+
+<!--布局：西-->
+<!-- <div data-options="region:'west',title:'系统菜单',split:true,data:data"id="sm" class="easyui-sidemenu"  style="width:15%;"> -->
+    <!-- <div  data-options=""></div> -->
+	
+    <!--分类效果实现-->
+    <!-- <div class="easyui-accordion" data-options="fit:true,border:false">
+        <div title="图层编辑" iconCls="icon-ok" selected="true" style="overflow:auto;padding:0px">    
+           
+
+            <div style="margin:5px 0;text-align:center">
+                <a id="drawBillboard" class="easyui-linkbutton" style="width:120px">绘制点</a>
+            </div>
+            <div style="margin:5px 0;text-align:center">
+                <a id="drawLine" class="easyui-linkbutton" style="width:120px;">绘制线</a>
+            </div>
+            <div style="margin:5px 0;text-align:center">
+                <a id="drawGon" class="easyui-linkbutton" style="width:120px">绘制面</a>
+            </div>
+            <div style="margin:5px 0;text-align:center">
+                <a id="clearOne" class="easyui-linkbutton" style="width:120px">单个清除</a>
+            </div>
+            <div style="margin:5px 0;text-align:center">
+                <a id="clear" class="easyui-linkbutton" style="width:120px">全部清除</a>
+            </div>
+        </div>
+
+
+    <div title="查询功能" iconCls="icon-ok" style="overflow:auto;padding:0px">   
+        <div style="margin:5px 0;text-align:center">
+            <a id="localfind" class="easyui-linkbutton" style="width:120px">经纬度显示</a>
+        </div> 
+        <div style="margin:5px 0">
+            <a>经度：</a>
+            <input id="longitude_show"type="lable"  style="color:blue" />
+        </div>
+        <div style="margin:5px 0">
+            <a>纬度：</a>
+            <input id="latitude_show"type="lable"  style="color:blue" />
+        </div>
+        <div style="margin:5px 0">
+            <a>高度：</a>
+            <input id="altitude_show"type="lable"  style="color:blue" />
+        </div>   
+        <div style="margin:5px 0;text-align:center">
+            <a id="julifind" class="easyui-linkbutton" style="width:120px">距离查询</a>
+        </div>           
+                 <input type="text" value="长沙" id="staName" />
+               <input type="button" value="属性查询" id="Btn" />
+                    <div id="divShowResult"></div>           
+        </div>
+     
+    </div> -->
+    
+<!-- </div> -->
+
+    <!--布局：中-->
+<div data-options="region:'center',title:'地图',iconCls:'icon-ok'">
+   
+    <div class="easyui-panel" style="padding:5px;width: 100%;">
+        <a href="#" class="easyui-linkbutton" data-options="plain:true">菜单</a>
+        <a href="#"id="drawBillboard" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-point'">绘制点</a>
+        <a href="#"id="drawLine" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-line'">绘制线</a>
+        <a href="#"id="drawGon" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-polygon'">绘制面</a>
+        <a href="#"id="clearOne"  class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-singleclear'">单个清除</a>
+        <a href="#"id="clear" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-clear'">全部清除</a>
+        <a href="#"id="clline" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-celiangline'">测距</a>
+        <!-- <a href="#"id="clpolyon" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-celiangline'">测面积</a> -->
+
+        <a href="#" class="easyui-menubutton" data-options="menu:'#mm1',iconCls:'icon-edit'">draw</a>
+        <a href="#" class="easyui-menubutton" data-options="menu:'#mm2',iconCls:'icon-help'">Help</a>
+        <a href="#" class="easyui-menubutton" data-options="menu:'#mm3'">About</a>
+    </div>
+    <div id="mm1" style="width:150px;">
+        <div style="margin:5px 0;text-align:center;width:80">
+            <a id="drawBillboard" class="easyui-linkbutton" style="width:110px;height: 28px;">绘制点</a>
+        </div>
+        <div style="margin:5px 0;text-align:center">
+            <a id="drawLine" class="easyui-linkbutton" style="width:110px;height: 28px;">绘制线</a>
+        </div>
+        <div style="margin:5px 0;text-align:center">
+            <a id="drawGon" class="easyui-linkbutton" style="width:110px;height: 28px;">绘制面</a>
+        </div>
+        <div style="margin:5px 0;text-align:center">
+            <a id="clearOne" class="easyui-linkbutton" style="width:110px;height: 28px;">单个清除</a>
+        </div>
+        <div style="margin:5px 0;text-align:center">
+            <a id="clear" class="easyui-linkbutton" style="width:110px;height: 28px;">全部清除</a>
+        </div>
+    </div>
+    <div id="mm2" style="width:100px;">
+        <div>Help</div>
+        <div>Update</div>
+        <div>About</div>
+    </div>
+    <div id="mm3" class="menu-content" style="background:#f0f0f0;padding:10px;text-align:left">
+        <img src="http://www.jeasyui.com/images/logo1.png" style="width:150px;height:50px">
+        <p style="font-size:14px;color:#444;">Try jQuery EasyUI to build your modern, interactive, javascript applications.</p>
+    </div>
+    <div id="cesiumContainer"style="height:94.5%"></div>
+
+
+<!-- 显示经纬度和高程 -->
+   <div id="latlng_show" style="width:450px;height:30px;position:absolute;bottom:20px;right:0px;z-index:1;font-size:10px;">
+    <div style="width:130px;height:30px;float:left;">
+         <font size="3" color="white">经度：<span id="longitude_show"></span></font>
+    </div>
+    <div style="width:130px;height:30px;float:left;">
+         <font size="3" color="white">纬度：<span id="latitude_show"></span></font>
+    </div>
+    <div style="width:150px;height:30px;float:left;">
+         <font size="3" color="white">视角高：<span id="altitude_show"></span>km</font>
+    </div>
+</div>
+
+
+
+  
+  <script>
+     
+
+
+
+     
+      Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIyYmE4ZGVkMy0wYTA5LTQ0ZjItYjNkNS1jMWRkMjFmNTk0ZDgiLCJpZCI6MjIyODcsInNjb3BlcyI6WyJhc3IiLCJnYyJdLCJpYXQiOjE1ODE2ODExMjN9.8PiMVqZQEY4QM5p0ragQkhSIM9KbSur4eN5HEN0ms14'
+      
+      var viewer = new Cesium.Viewer('cesiumContainer',{
+      //添加谷歌影像
+      imageryProvider:new Cesium.UrlTemplateImageryProvider({
+                 url:"http://mt1.google.cn/vt/lyrs=s&hl=zh-CN&x={x}&y={y}&z={z}&s=Gali"
+           }) ,
+           //查找位置工具
+           geocoder:false,
+           //视角返回工具
+           homeButton:false,
+           //选择视角模式
+           sceneModePicker:false,
+           //图层选择器
+           baseLayerPicker:false,
+           //导航帮助嗯钮
+           navigationHelpButton:false,
+           //动画器件
+           animation:false, 
+           //时间线
+           timeline:false, 
+          //全屏嗯钮 
+          fullscreenButton:false,
+
+         //添加地形
+        //  terrainProvider : Cesium.createWorldTerrain({
+        // requestWaterMask : true,
+        // requestVertexNormals : true
+        // })
+    });
+
+    //设置初始角度 120.17370343208314,35.941871151299566
+    viewer.camera.flyTo({
+    destination :Cesium.Cartesian3.fromDegrees(113.06277,22.64785, 1500.0), // 设置位置
+    orientation: {
+          heading :Cesium.Math.toRadians(20.0), // 方向
+          pitch :Cesium.Math.toRadians(-90.0),// 倾斜角度
+          roll :0
+    },
+    duration:5, // 设置飞行持续时间，默认会根据距离来计算
+    complete:function () {
+    // 到达位置后执行的回调函数
+    },
+    cancle:function () {
+    // 如果取消飞行则会调用此函数
+    },
+    pitchAdjustHeight:-90, // 如果摄像机飞越高于该值，则调整俯仰俯仰的俯仰角度，并将地球保持在视口中。
+    maximumHeight:5000, // 相机最大飞行高度
+    flyOverLongitude:100, // 如果到达目的地有2种方式，设置具体值后会强制选择方向飞过这个经度(这个，很好用)
+    })
+
+
+
+// //加载数据
+// var promise=Cesium.GeoJsonDataSource.load('./map.geojson');
+//     promise.then(function(dataSource) {
+//         viewer.dataSources.add(dataSource);
+//         var entities = dataSource.entities.values;
+//         var colorHash = {};
+//         for (var i = 0; i < entities.length; i++) {
+//             var entity = entities[i];
+//             var name = entity.name;
+//             var color = colorHash[name];
+//             if (!color) {
+// //              color = Cesium.Color.fromRandom({
+// //                  alpha : 1.0
+// //              });
+//                 color = Cesium.Color.WHITESMOKE,
+//                 colorHash[name] = color;
+//             }
+//             entity.polygon.material = color;
+//             entity.polygon.outline = false;            
+//             entity.polygon.extrudedHeight =50.0;
+//             }
+//         });
+// 	viewer.flyTo(promise);
+
+//loading data
+// var palaceTileset = new Cesium.Cesium3DTileset({
+//      url: './data/tileset.json'
+//      //或者url: 'http://ip:port/www/DAEPalace/tileset.json'
+//  })
+//  viewer.scene.primitives.add(palaceTileset);  
+
+//使模型贴地
+//  var longitude = 113.06277;
+// var latitude = 22.64785;
+// height = -65.38590702090875;
+// var heading = 2;
+// palaceTileset.readyPromise.then(function(argument) {
+//     //经纬度、高cheng转笛卡尔坐标
+//     var position = Cesium.Cartesian3.fromDegrees(longitude, latitude, height);
+//     var mat = Cesium.Transforms.eastNorthUpToFixedFrame(position);
+//     var rotationX = Cesium.Matrix4.fromRotationTranslation(Cesium.Matrix3.fromRotationZ(Cesium.Math.toRadians(heading)));
+//     Cesium.Matrix4.multiply(mat, rotationX, mat);
+//     palaceTileset._root.transform = mat;
+// })
+
+
+var draw = new DrawPolt({
+		viewer:viewer
+	})
+	$("#drawBillboard").click(function () {
+		draw.create(1);
+	});
+	
+	$("#drawLine").click(function () {
+		draw.create(2);
+	});
+	
+	$("#drawGon").click(function () {
+		draw.create(3);
+	});
+	$("#clear").click(function () {
+		viewer.entities.removeAll();
+	});
+
+	$("#clearOne").click(function () {
+		draw.clearOne();
+	});
+
+    $("#clline").click(function () {
+		measureLineSpace(viewer, null);
+    });
+  
+
+    //经纬度显示
+    var longitude_show=document.getElementById('longitude_show');
+var latitude_show=document.getElementById('latitude_show');
+var altitude_show=document.getElementById('altitude_show');
+var canvas=viewer.scene.canvas;
+//具体事件的实现
+var ellipsoid=viewer.scene.globe.ellipsoid;
+var handler = new Cesium.ScreenSpaceEventHandler(canvas);
+handler.setInputAction(function(movement){
+            //捕获椭球体，将笛卡尔二维平面坐标转为椭球体的笛卡尔三维坐标，返回球体表面的点
+             var cartesian=viewer.camera.pickEllipsoid(movement.endPosition, ellipsoid);
+              if(cartesian){
+                   //将笛卡尔三维坐标转为地图坐标（弧度）
+                   var cartographic=viewer.scene.globe.ellipsoid.cartesianToCartographic(cartesian);
+                   //将地图坐标（弧度）转为十进制的度数
+                    var lat_String=Cesium.Math.toDegrees(cartographic.latitude).toFixed(4);
+                    var log_String=Cesium.Math.toDegrees(cartographic.longitude).toFixed(4);
+					var alti_String=(viewer.camera.positionCartographic.height/1000).toFixed(2);
+					longitude_show.innerHTML=log_String;
+					latitude_show.innerHTML=lat_String;
+					altitude_show.innerHTML=alti_String;
+               }
+        },Cesium.ScreenSpaceEventType.MOUSE_MOVE);
+	
+      
+
+  </script>
+</body>
+</html>

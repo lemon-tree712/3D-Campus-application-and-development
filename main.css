@@ -1,0 +1,23 @@
+#entity{
+    font-size: 20px;
+    border-radius: 8px;
+    z-index: 999;
+    display: none;
+    top:10%;
+    position: relative;
+    background: gray;
+    width:290px;
+    height: 200px;
+}
+#entity .title {
+    top: 6px;
+    left: 8px;
+    font-size: 20px;
+    margin: 5px 3px;
+}
+#entity .container-fluid{
+    margin:10px 3px;
+}
+#entity .container-fluid button{
+    margin-right: 20px;
+}
